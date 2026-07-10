@@ -1,0 +1,6 @@
+@CLDH.PatientRegistration_HostAddress = http://localhost:5078
+
+GET {{CLDH.PatientRegistration_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
