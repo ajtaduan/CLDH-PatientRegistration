@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameWorkCore;
+using Microsoft.EntityFrameworkCore;
 using CLDH.PatientRegistration.Data;
 using CLDH.PatientRegistration.Models;
 
@@ -22,7 +22,7 @@ namespace CLDH.PatientRegistration.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var patients = awat _db.Patients.ToListAsync();
+            var patients = await _db.Patients.ToListAsync();
             return Ok(patients);
         }
 
@@ -40,17 +40,17 @@ namespace CLDH.PatientRegistration.Controllers
         public async Task<IActionResult> Create([FromBody] Patient patient)
         {
             // ModelState checks [Required]/[MaxLength] rules I put on the Patient model
-            if (!MOdelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             _db.Patients.Add(patient);
             await _db.SaveChangesAsync();
 
-            return CreateAtAction(nameof(GetById), new { id = patient.Id }, patient);
+            return CreatedAtAction(nameof(GetById), new { id = patient.Id }, patient);
         }
 
         // PUT /api/patient/5 - update an existing patient
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Patient patient)
+        public async Task<IActionResult> Update(int id, [FromBody] Patient updated)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -59,7 +59,7 @@ namespace CLDH.PatientRegistration.Controllers
 
             // Copy over the bew values onto the existing entity
             patient.FullName = updated.FullName;
-            patient.BirthDate = updated.Birthdate;
+            patient.BirthDate = updated.BirthDate;
             patient.Gender = updated.Gender;
             patient.ContactNumber = updated.ContactNumber;
             patient.Address = updated.Address;
@@ -70,7 +70,7 @@ namespace CLDH.PatientRegistration.Controllers
 
         // DELETE /api/patient/5
         [HttpDelete("{id}")]
-        public async Task<IActionREsult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var patient = await _db.Patients.FindAsync(id);
             if (patient == null) return NotFound(new { message = "Patient not found" });

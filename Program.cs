@@ -63,6 +63,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseDefaultFiles(); //Serves index.html when visiting the root URL
+app.UseStaticFiles(); // Serves everything inside wwwroot (html, css, js)
+
 app.UseAuthentication(); // Checks who you are first
 app.UseAuthorization(); // Then checks what you're allowed to do
 
